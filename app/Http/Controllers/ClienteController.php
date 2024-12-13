@@ -141,7 +141,7 @@ class ClienteController extends Controller
         if(!$cliente){
             return response()->json([
                 'error' => 'Não encontramos nenhum Cliente.'
-            ],500);
+            ], 500);
         }
      
         return response()->json($cliente);
@@ -151,15 +151,13 @@ class ClienteController extends Controller
     
     public function consultarPorUltimoNumeroPlaca($numero)
     {
-        // Validação para garantir que o número é válido
+            // Validação para garantir que o número é válido
         if (!is_numeric($numero) || strlen($numero) != 1) {
             return response()->json(['error' => 'Número inválido. Informe um número entre 0 e 9.'], 400);
         }
 
         // Buscar os clientes onde o último número da placa é igual ao informado
-        $clientes = Cliente::whereHas('carros', function ($query) use ($numero) {
-            $query->whereRaw('RIGHT(placa, 1) = ?', [$numero]);
-        })->get();
+        $clientes = Cliente::whereRaw('RIGHT(placa, 1) = ?', [$numero])->get();
 
         // Verificar se há resultados
         if ($clientes->isEmpty()) {

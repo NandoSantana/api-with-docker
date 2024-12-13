@@ -21,6 +21,8 @@ Route::put('/cliente/{id}', [ClienteController::class, 'updateName']);
 
 Route::get('/cliente/{id}', [ClienteController::class, 'getClient']);
 
+Route::get('/consulta/final-placa/{numero}', [ClienteController::class, 'consultarPorUltimoNumeroPlaca']);
+
 // Route::put('/cliente/{id}', function (Request $request) {
 //     $cliente = Cliente::find($id);
 //     $cliente->nome = 'Jose';
@@ -39,9 +41,12 @@ Route::delete('/cliente/{id}', function (Request $request) {
 //     getClient
 // });
 
-Route::get('/consulta/final-placa/{numero}', function (Request $request) {
-    $cliente = Cliente::find($id);
+// Route::get('/consulta/final-placa/{numero}', function (Request $request) {
+//     $cliente = Cliente::find($id);
     
-    $cliente->save();
-    return response()->json($cliente);
-});
+//     $cliente->save();
+//     return response()->json($cliente);
+// });
+
+
+
