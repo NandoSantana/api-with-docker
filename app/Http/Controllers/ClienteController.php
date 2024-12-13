@@ -167,4 +167,16 @@ class ClienteController extends Controller
         // Retornar os dados dos clientes
         return response()->json($clientes, 200);
     }
+
+    public function delete(Request $request)
+    {
+        $cliente = Cliente::find($request->id);
+        if(!$cliente){
+            return response()->json(['error' => 'não encontrei o cliente'], 400);
+        }
+        $cliente->delete();
+        return response()->json($cliente);
+    }
+
+
 }

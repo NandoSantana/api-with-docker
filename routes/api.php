@@ -23,15 +23,5 @@ Route::get('/cliente/{id}', [ClienteController::class, 'getClient']);
 
 Route::get('/consulta/final-placa/{numero}', [ClienteController::class, 'consultarPorUltimoNumeroPlaca']);
 
-
-Route::delete('/cliente/{id}', function (Request $request) {
-    $cliente = Cliente::find($request->id);
-    if(!$cliente){
-        return response()->json(['error' => 'não encontrei o cliente'], 400);
-    }
-    $cliente->delete();
-    return response()->json($cliente);
-});
-
-
+Route::delete('/consulta/final-placa/{numero}', [ClienteController::class, 'delete']);
 
