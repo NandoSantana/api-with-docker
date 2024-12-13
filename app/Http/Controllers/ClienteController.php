@@ -12,14 +12,60 @@ class ClienteController extends Controller
     public function updateName(Request $request)
     {
 
-        $validatedData = $request->validate([
-            'nome' => 'required|string|max:255',
-        ]);
+        // $validatedData = $request->validate([
+        //     'nome' => 'required|string|max:255',
+        // ]);
 
-        $cliente = Cliente::find($id);
-        $cliente->nome = $request->nome;
-        $cliente->update();
-        return response()->json($cliente);
+        // dd('teste');
+        // $cliente = Cliente::find($request->id);
+        // dd($request['nome']);
+
+
+
+        // $cliente->nome = $request->nome;
+        // $cliente->save();
+        // return response()->json($cliente);
+
+        try {
+            // Buscar cliente pelo ID
+            $cliente = Cliente::findOrFail($request->id);
+
+            // Validação dos dados
+            $validatedData = $request->validate([
+                'nome' => 'sometimes|required|string|max:255',
+                'telefone' => 'sometimes|required|string|max:15|regex:/^\+?[0-9\s\-]+$/',
+                'cpf' => 'sometimes|required|string|size:11|regex:/^\d{11}$/|unique:clientes,cpf,' . $cliente->id,
+                'placa' => 'sometimes|required|string|size:7|regex:/^[A-Za-z]{3}[0-9][A-Za-z0-9][0-9]{2}$/',
+            ]);
+
+            // Atualizar o cliente
+            $cliente->update($validatedData);
+
+            // Retornar resposta de sucesso
+            return response()->json([
+                'message' => 'Cliente atualizado com sucesso!',
+                'cliente' => $cliente,
+            ], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Retornar erro se o cliente não for encontrado
+            return response()->json([
+                'message' => 'Cliente não encontrado.',
+            ], 404);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Retornar erros de validação
+            return response()->json([
+                'message' => 'Erro de validação.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            // Retornar erro genérico
+            return response()->json([
+                'message' => 'Erro ao atualizar o cliente.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -88,7 +134,20 @@ class ClienteController extends Controller
         }
     }
     
-    
+    public function getClient(Request $request)
+    {
+
+        $cliente = Cliente::find($request->id);
+        if(!$cliente){
+            return response()->json([
+                'error' => 'Não encontramos nenhum Cliente.'
+            ],500);
+        }
+     
+        return response()->json($cliente);
+    }
+
+
     
     public function consultarPorUltimoNumeroPlaca($numero)
     {
