@@ -9,7 +9,7 @@ FROM --platform=linux/amd64 php:7.4-fpm-alpine3.14
 # Set working directory
 WORKDIR /var/www/html
 
-# RUN apt-get update -y && apt-get upgrade -y;
+RUN apt-get update -y && apt-get upgrade -y;
 
 # Install Additional dependencies
 RUN apk add --update --no-cache \
