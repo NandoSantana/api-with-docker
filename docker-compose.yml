@@ -1,0 +1,63 @@
+version: "3.8"
+services:
+  app-rent:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hakase-labs/laravel
+    container_name: app-rent
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - mynet
+
+  #Nginx Service
+  nginx-rent:
+    image: nginx:alpine
+    container_name: nginx-rent
+    platform: linux/amd64
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - mynet
+
+  #MySQL Service
+  db-rent:
+    platform: linux/x86_64
+    image: mysql:5.7
+    container_name: db-rent
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laraveldb
+      MYSQL_USER: rent
+      MYSQL_PASSWORD: rootrent
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysqldata:/var/lib/mysql/
+    networks:
+      - mynet
+
+#Docker Networks
+networks:
+  mynet:
+    driver: bridge
+#Volumes
+volumes:
+  mysqldata:
+    driver: local
