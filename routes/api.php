@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClienteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,35 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/cliente', [ClienteController::class, 'add']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::put('/cliente/{id}', [ClienteController::class, 'updateName']);
+
+
+Route::put('/cliente/{id}', function (Request $request) {
+    $cliente = Cliente::find($id);
+    $cliente->nome = 'Jose';
+    $cliente->save();
+    return response()->json($cliente);
+});
+
+Route::delete('/cliente/{id}', function (Request $request) {
+    $cliente = Cliente::find($id);
+    $cliente->save();
+    return response()->json($cliente);
+});
+
+
+Route::get('/cliente/{id}', function (Request $request) {
+    $cliente = Cliente::find($id);
+    
+    $cliente->save();
+    return response()->json($cliente);
+});
+
+Route::get('/consulta/final-placa/{numero}', function (Request $request) {
+    $cliente = Cliente::find($id);
+    
+    $cliente->save();
+    return response()->json($cliente);
 });
